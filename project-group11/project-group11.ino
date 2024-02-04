@@ -1,96 +1,74 @@
-// Example testing sketch for various DHT humidity/temperature sensors
-// Written by ladyada, public domain
-
-// REQUIRES the following Arduino libraries:
-// - DHT Sensor Library: https://github.com/adafruit/DHT-sensor-library
-// - Adafruit Unified Sensor Lib: https://github.com/adafruit/Adafruit_Sensor
-
 #include "DHT.h"
 
 #define DHTPIN 5     // Digital pin connected to the DHT sensor
-// Feather HUZZAH ESP8266 note: use pins 3, 4, 5, 12, 13 or 14 --
-// Pin 15 can work but DHT must be disconnected during program upload.
+#define DHTTYPE DHT11   // DHT 11
 
-// Uncomment whatever type you're using!
-//#define DHTTYPE DHT11   // DHT 11
-#define DHTTYPE DHT11   // DHT 22  (AM2302), AM2321
-//#define DHTTYPE DHT21   // DHT 21 (AM2301)
+#define POWER_PIN  7
+#define SIGNAL_PIN A5
+#define SENSOR_MIN 0
+#define SENSOR_MAX 521
 
-// Connect pin 1 (on the left) of the sensor to +5V
-// NOTE: If using a board with 3.3V logic like an Arduino Due connect pin 1
-// to 3.3V instead of 5V!
-// Connect pin 2 of the sensor to whatever your DHTPIN is
-// Connect pin 3 (on the right) of the sensor to GROUND (if your sensor has 3 pins)
-// Connect pin 4 (on the right) of the sensor to GROUND and leave the pin 3 EMPTY (if your sensor has 4 pins)
-// Connect a 10K resistor from pin 2 (data) to pin 1 (power) of the sensor
+int value = 0; // variable to store the sensor value
+int level = 0; // variable to store the water level
 
-// Initialize DHT sensor.
-// Note that older versions of this library took an optional third parameter to
-// tweak the timings for faster processors.  This parameter is no longer needed
-// as the current DHT reading algorithm adjusts itself to work on faster procs.
 DHT dht(DHTPIN, DHTTYPE);
 
 void setup() {
   Serial.begin(9600);
-  Serial.println(F("DHTxx test!"));
-
+  pinMode(POWER_PIN, OUTPUT);   // configure D7 pin as an OUTPUT
+  digitalWrite(POWER_PIN, LOW); // turn the sensor OFF
+  Serial.println(F("Urine Detector Activated"));
+  
   dht.begin();
-  pinMode(4, OUTPUT);
-  pinMode(7, OUTPUT);
-  pinMode(9, OUTPUT);
+  pinMode(9, OUTPUT);  // Yellow LED light on pin 9 on the AVR board
+  pinMode(10, OUTPUT);  // Green LED light on pin 10 on the AVR board
+  pinMode(11, OUTPUT);  // Red LED light on pin 11 on the AVR board
 }
 
 void loop() {
-  // Wait a few seconds between measurements.
-  delay(2000);
+  digitalWrite(POWER_PIN, HIGH);  // turn the sensor ON
+  delay(10);                      // wait 10 milliseconds
+  value = analogRead(SIGNAL_PIN); // read the analog value from sensor
+  digitalWrite(POWER_PIN, LOW);   // turn the sensor OFF
 
+  level = map(value, SENSOR_MIN, SENSOR_MAX, 0, 4); // 4 levels
+  
+  delay(2000);  // Wait 2 seconds between measurements
+  
   // Reading temperature or humidity takes about 250 milliseconds!
-  // Sensor readings may also be up to 2 seconds 'old' (its a very slow sensor)
+  // Sensor readings may also be up to 2 seconds 'old' (it's a very slow sensor)
   float h = dht.readHumidity();
-  // Read temperature as Celsius (the default)
-  float t = dht.readTemperature();
-  // Read temperature as Fahrenheit (isFahrenheit = true)
-  float f = dht.readTemperature(true);
-
+  
   // Check if any reads failed and exit early (to try again).
-  if (isnan(h) || isnan(t) || isnan(f)) {
-    Serial.println(F("Failed to read from DHT sensor!"));
+  if (isnan(h)) {
+    Serial.println(F("Failed to read humidity from DHT sensor!"));
     return;
   }
 
   if (h <= 60) {
-    Serial.println("Your temperature is low, Seek medical attention!");
-    digitalWrite(7, LOW);
-    digitalWrite(4, HIGH);
-    digitalWrite(9, LOW);
+    Serial.println("Your child has not urinated, they are asleep in bed. Okay!");
+    digitalWrite(10, LOW);  // Green LED OFF
+    digitalWrite(9, HIGH);  // Yellow LED ON
+    digitalWrite(11, LOW);  // Red LED OFF
   }
   else if (h <= 90) {
-    Serial.println("Your temperature is normal, Okey!");
-    digitalWrite(4, LOW);
-    digitalWrite(7, HIGH);
-    digitalWrite(9, LOW);
+    Serial.println("Your child has started urinating in bed, wake them up to use the toilet!");
+    digitalWrite(9, LOW);   // Yellow LED OFF
+    digitalWrite(10, HIGH); // Green LED ON
+    digitalWrite(11, LOW);  // Red LED OFF
   }
   else {
-    Serial.println("Your temperature is High, Seek medical attention!");
-    digitalWrite(4, LOW);
-    digitalWrite(9, HIGH);
-    digitalWrite(7, LOW);
-    }
-
-  // Compute heat index in Fahrenheit (the default)
-  float hif = dht.computeHeatIndex(f, h);
-  // Compute heat index in Celsius (isFahreheit = false)
-  float hic = dht.computeHeatIndex(t, h, false);
+    Serial.println("Your child has urinated, wake them up to change their clothes and beddings");
+    digitalWrite(9, LOW);   // Yellow LED OFF
+    digitalWrite(11, HIGH); // Red LED ON
+    digitalWrite(10, LOW);  // Green LED OFF
+  }
 
   Serial.print(F("Humidity: "));
   Serial.print(h);
-  Serial.print(F("%  Temperature: "));
-  Serial.print(t);
-  Serial.print(F("°C "));
-  Serial.print(f);
-  Serial.print(F("°F  Heat index: "));
-  Serial.print(hic);
-  Serial.print(F("°C "));
-  Serial.print(hif);
-  Serial.println(F("°F"));
+  Serial.println(F("%"));
+
+  Serial.print("Water level: ");
+  Serial.println(level);
+  delay(1000);  // Wait for 1 second before next loop iteration
 }
