@@ -1,13 +1,15 @@
 # Title:
 Automated Liquid Detection System for Healthcare Facilities and Bedwetting Solutions
 
+![Prototype of image](/Images/)
+
 # Background:
 Bedwetting is a common issue in nursing homes and child care units, leading to discomfort and potential health risks for individuals. To address this problem, we developed an Automated Liquid Detection System using moisture and humidity sensors. The system provides real-time monitoring and alerting for caregivers, ensuring timely response and enhanced patient care.
 
 # Problem Statement:
 Bedwetting incidents pose challenges in healthcare facilities and child care units, affecting the well-being and hygiene of individuals. Manual monitoring is time-consuming and may lead to delayed responses. The need for an automated solution that can promptly detect liquid and alert caregivers is crucial for maintaining a clean and comfortable environment.
 
-#Objectives:
+# Objectives:
 
 * Develop an Automated Liquid Detection System using moisture and humidity sensors.
 * Implement a real-time monitoring system with three detection levels: Normal, Start (initial moisture detection), and Urinated.

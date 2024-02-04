@@ -14,12 +14,12 @@ This repository contains the project developed during the three-day HackIT 2024 
 ## Project Title: Automated Liquid Detection System
 
 ### Team Members:
-* Titus
-* James
-* Lydiah
-* Malon
-* 
-* Solomon
+* Titus Maina
+* James Maina
+* Lydiah Nyawira
+* Ian Malon
+* Mick Alvin
+* Solomon Kaniaru
 
 
 ## Objective:
@@ -57,10 +57,14 @@ We would like to express our gratitude to Mama Ngina University for hosting the 
 # Contact:
 For inquiries or collaboration opportunities, please contact:
 
-[Team Member 1] - [email@example.com]
-[Team Member 2] - [email@example.com]
-[Team Member 3] - [email@example.com]
-[Team Member 4] - [email@example.com]
+Titua Maina - titusmainakamau053@gmail.com
+James Maina - jemo7157@gmail.com
+Lydiah Nyawira - nyamulydia43@gmail.com
+Ian Malon - 
+Mick Alvin - mickalvin31@gmail.com
+Solomon Kaniaru - solomonkaniaru154@gmail.com
+
+
 Thank you for exploring our project! We appreciate your interest in our journey during HackIT 2024.
 
 
