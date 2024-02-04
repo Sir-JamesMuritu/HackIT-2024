@@ -5,8 +5,11 @@ This repository contains the project developed during the three-day HackIT 2024 
 ## Event Details
 
 *Event Name*: HackIT 2024
+
 *Duration*: 3 days
+
 *Venue*: Mama Ngina University
+
 *Date*: 2 - 4 Feb 2024
 
 # Project Overview
