@@ -58,10 +58,15 @@ We would like to express our gratitude to Mama Ngina University for hosting the 
 For inquiries or collaboration opportunities, please contact:
 
 Titua Maina - titusmainakamau053@gmail.com
+
 James Maina - jemo7157@gmail.com
+
 Lydiah Nyawira - nyamulydia43@gmail.com
+
 Ian Malon - 
+
 Mick Alvin - mickalvin31@gmail.com
+
 Solomon Kaniaru - solomonkaniaru154@gmail.com
 
 
