@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register Page</title>
+
+    <!-- Firebase SDK (v9) -->
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js"></script>
+
+    <!-- Your Firebase config -->
+    <script type="module">
+        // Importing Firebase methods (v9 modular)
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-app.js";
+        import { getDatabase, ref, get, child, set } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-database.js";
+        import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
+
+        // Firebase configuration
+        import { firebaseConfig } from './firebaseConfig.js'; // Import config
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        const auth = getAuth(app);
+
+        // Register function
+        async function registerForm(event) {
+            event.preventDefault();
+
+            const email = document.getElementById('email').value;
+            const deviceId = document.getElementById('deviceId').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                // Check if the DeviceID exists
+                const deviceRef = ref(database, 'Devices/' + deviceId);
+                const deviceSnapshot = await get(deviceRef);
+
+                if (deviceSnapshot.exists()) {
+                    console.log('Device ID exists. Proceeding with registration.');
+
+                    // Register the user in Firebase Authentication
+                    createUserWithEmailAndPassword(auth, email, password)
+                        .then((userCredential) => {
+                            const user = userCredential.user;
+                            console.log('User registered:', user);
+
+                            // Store user information in Firebase Realtime Database
+                            set(ref(database, 'Users/' + user.uid), {
+                                email: email,
+                                deviceId: deviceId
+                            });
+
+                            alert('User registered successfully');
+                        })
+                        .catch((error) => {
+                            console.error('Error during registration:', error);
+                            alert('Registration failed: ' + error.message);
+                        });
+                } else {
+                    alert('Device ID not found.');
+                }
+            } catch (error) {
+                console.error('Error checking Device ID:', error);
+            }
+        }
+
+        // Attach form submission event listener
+        window.onload = function() {
+            document.getElementById('registerForm').addEventListener('submit', registerForm);
+        };
+    </script>
+
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <h2>Register</h2>
+    <form id="registerForm">
+        <label for="email">Email:</label>
+        <input type="email" id="email" required>
+
+        <label for="deviceId">Device ID:</label>
+        <input type="text" id="deviceId" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" required>
+
+        <button type="submit">Register</button>
+    </form>
+</body>
+</html>
